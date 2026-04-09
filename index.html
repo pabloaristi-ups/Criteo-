@@ -3,652 +3,213 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Frávega · Retail Media — Proyección de Inventario y Revenue</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Frávega · Retail Media Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0a0e0c;
-  --bg2: #111612;
-  --bg3: #161d18;
-  --surface: #1a2420;
-  --surface2: #1f2c27;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --green: #2dbd82;
-  --green2: #1d9e6a;
-  --green3: #0f6e4a;
-  --green-dim: rgba(45,189,130,0.12);
-  --green-glow: rgba(45,189,130,0.25);
-  --amber: #f5a623;
-  --amber-dim: rgba(245,166,35,0.12);
-  --blue: #4a9eff;
-  --blue-dim: rgba(74,158,255,0.12);
-  --purple: #a78bfa;
-  --purple-dim: rgba(167,139,250,0.12);
-  --text: #e8ede9;
-  --text2: #8fa896;
-  --text3: #5a7264;
-  --font-display: 'DM Serif Display', Georgia, serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
-  --font-mono: 'DM Mono', monospace;
-  --radius: 12px;
-  --radius-sm: 8px;
+  --bg:#f5f3ef;--bg2:#ede9e2;--surface:#fff;--surface2:#f9f7f4;
+  --border:#e2ddd6;--border2:#ccc7be;
+  --ink:#1a1714;--ink2:#5a5450;--ink3:#9a948e;
+  --green:#1a6647;--green2:#22885e;--green-light:#e8f4ed;--green-mid:#b8ddc9;
+  --amber:#b85c1a;--amber-light:#fdf0e6;--amber-mid:#f0c090;
+  --blue:#1a4a8a;--blue-light:#e8eef8;
+  --purple:#5a2d8a;--purple-light:#f0eaf8;
+  --red:#8a1a1a;--red-light:#f8eaea;--red-mid:#f0b0b0;
+  --radius:10px;--radius-sm:6px;
+  --font-d:'Syne',system-ui,sans-serif;
+  --font-b:'Instrument Sans',system-ui,sans-serif;
+  --font-s:'Instrument Serif',Georgia,serif;
 }
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-body);
-  font-size: 14px;
-  line-height: 1.6;
-  min-height: 100vh;
-}
-
-/* NOISE TEXTURE */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.4;
-}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-b);font-size:14px;line-height:1.5;min-height:100vh}
 
 /* NAV */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(10,14,12,0.85);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 56px;
-}
-.nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.nav-logo {
-  font-family: var(--font-display);
-  font-size: 18px;
-  color: var(--text);
-  letter-spacing: -0.02em;
-}
-.nav-logo span { color: var(--green); }
-.nav-badge {
-  font-size: 10px;
-  font-weight: 500;
-  font-family: var(--font-mono);
-  color: var(--green);
-  background: var(--green-dim);
-  border: 1px solid rgba(45,189,130,0.2);
-  padding: 2px 8px;
-  border-radius: 999px;
-  letter-spacing: 0.05em;
-}
-.nav-links { display: flex; gap: 4px; }
-.nav-link {
-  font-size: 13px;
-  color: var(--text2);
-  padding: 6px 14px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all 0.15s;
-  text-decoration: none;
-}
-.nav-link:hover { color: var(--text); background: var(--surface); }
-.nav-link.active { color: var(--green); background: var(--green-dim); }
+nav{position:sticky;top:0;z-index:100;background:rgba(245,243,239,0.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:52px}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{font-family:var(--font-d);font-size:16px;font-weight:600;color:var(--ink);letter-spacing:-.02em}
+.nav-logo span{color:var(--green)}
+.nav-pill{font-size:10px;font-weight:600;color:var(--green);background:var(--green-light);border:1px solid var(--green-mid);padding:2px 8px;border-radius:999px;letter-spacing:.04em;font-family:var(--font-d)}
+.nav-tabs{display:flex;gap:2px;background:var(--bg2);border-radius:var(--radius-sm);padding:3px}
+.nav-tab{font-size:12px;font-weight:500;padding:5px 16px;border-radius:4px;cursor:pointer;color:var(--ink2);transition:all .15s;font-family:var(--font-d);border:none;background:none}
+.nav-tab:hover{color:var(--ink)}
+.nav-tab.active{background:var(--surface);color:var(--green);box-shadow:0 1px 3px rgba(0,0,0,.08)}
 
-/* SECTIONS */
-.section { padding: 60px 40px; position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; }
+/* VIEWS */
+.view{display:none}.view.active{display:block}
 
 /* HERO */
-.hero {
-  padding: 80px 40px 60px;
-  position: relative;
-  z-index: 1;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-.hero-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--green);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.hero-eyebrow::before {
-  content: '';
-  display: inline-block;
-  width: 20px;
-  height: 1px;
-  background: var(--green);
-}
-.hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 5vw, 58px);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: var(--text);
-  margin-bottom: 20px;
-}
-.hero-title em {
-  font-style: italic;
-  color: var(--green);
-}
-.hero-desc {
-  font-size: 16px;
-  color: var(--text2);
-  max-width: 540px;
-  line-height: 1.7;
-  margin-bottom: 40px;
-}
-.hero-meta {
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-.hero-meta-item {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text3);
-}
-.hero-meta-item span { color: var(--text2); }
+.hero{padding:44px 32px 32px;max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end}
+.hero-eyebrow{font-family:var(--font-d);font-size:10px;font-weight:600;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.hero-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--green)}
+.hero-title{font-family:var(--font-d);font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:-.03em;line-height:1.0;color:var(--ink);margin-bottom:12px}
+.hero-title em{font-family:var(--font-s);font-weight:400;font-style:italic;color:var(--green)}
+.hero-desc{font-size:13px;color:var(--ink2);max-width:480px;line-height:1.6}
+.hero-stats{display:flex;flex-direction:column;gap:8px;min-width:190px}
+.hstat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px}
+.hstat-lbl{font-size:10px;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;font-family:var(--font-d)}
+.hstat-val{font-size:18px;font-weight:700;color:var(--ink);font-family:var(--font-d);letter-spacing:-.02em}
+.hstat-val.g{color:var(--green)}
 
-/* DIVIDER */
-.section-divider {
-  border: none;
-  border-top: 1px solid var(--border);
-  max-width: 1200px;
-  margin: 0 auto;
-}
+/* MAIN */
+.main{max-width:1280px;margin:0 auto;padding:0 32px 60px}
 
-/* SECTION HEADER */
-.sec-header {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  margin-bottom: 28px;
-}
-.sec-num {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text3);
-  letter-spacing: 0.05em;
-}
-.sec-title {
-  font-family: var(--font-display);
-  font-size: 26px;
-  letter-spacing: -0.02em;
-  color: var(--text);
-}
+/* SEASON */
+.season-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;margin-bottom:18px}
+.season-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.season-title{font-size:11px;font-weight:600;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;font-family:var(--font-d)}
+.season-sel{font-size:12px;color:var(--green);font-weight:600;font-family:var(--font-d)}
+.mbars{display:flex;align-items:flex-end;gap:4px;height:52px}
+.mbar-w{flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer;gap:3px}
+.mbar{width:100%;border-radius:3px 3px 0 0;background:var(--bg2);border:1px solid var(--border);transition:all .15s;min-height:3px}
+.mbar-w:hover .mbar,.mbar-w.sel .mbar{background:var(--green);border-color:var(--green)}
+.mbar-w.peak .mbar{background:var(--green-mid);border-color:var(--green-mid)}
+.mbar-w.peak.sel .mbar{background:var(--green);border-color:var(--green)}
+.mlbl{font-size:9px;color:var(--ink3);font-family:var(--font-d);font-weight:600}
+.mbar-w.sel .mlbl{color:var(--green)}
 
-/* KPI GRID */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-  margin-bottom: 32px;
-}
-.kpi {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 20px 16px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.2s;
-}
-.kpi:hover { border-color: var(--border2); }
-.kpi::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--green), transparent);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.kpi:hover::before { opacity: 1; }
-.kpi-label { font-size: 11px; color: var(--text3); font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase; margin-bottom: 8px; }
-.kpi-value { font-size: 26px; font-weight: 600; color: var(--text); letter-spacing: -0.02em; font-family: var(--font-mono); }
-.kpi-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
-.kpi-green .kpi-value { color: var(--green); }
+/* SUMMARY */
+.summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;margin-bottom:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
+.sum-item .sum-lbl{font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;font-family:var(--font-d);margin-bottom:3px}
+.sum-val{font-size:21px;font-weight:700;color:var(--ink);font-family:var(--font-d);letter-spacing:-.02em}
+.sum-val.g{color:var(--green)}
+.sum-sub{font-size:11px;color:var(--ink3);margin-top:2px}
 
-/* SEASONAL CHART */
-.season-section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-  margin-bottom: 28px;
-}
-.season-title {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text2);
-  margin-bottom: 6px;
-}
-.season-subtitle {
-  font-size: 12px;
-  color: var(--text3);
-  margin-bottom: 20px;
-}
-.chart-wrap {
-  display: flex;
-  align-items: flex-end;
-  gap: 6px;
-  height: 100px;
-  margin-bottom: 8px;
-}
-.chart-bar-wrap {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-}
-.chart-bar {
-  width: 100%;
-  border-radius: 4px 4px 0 0;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  transition: all 0.2s;
-  min-height: 4px;
-}
-.chart-bar-wrap:hover .chart-bar,
-.chart-bar-wrap.selected .chart-bar {
-  background: var(--green);
-  border-color: var(--green);
-}
-.chart-bar-wrap.peak .chart-bar { background: var(--green3); border-color: var(--green2); }
-.chart-bar-wrap.peak:hover .chart-bar,
-.chart-bar-wrap.peak.selected .chart-bar { background: var(--green); border-color: var(--green); }
-.chart-label { font-size: 10px; color: var(--text3); font-family: var(--font-mono); }
-.chart-bar-wrap.selected .chart-label { color: var(--green); }
-.season-selected-info {
-  margin-top: 12px;
-  padding: 10px 14px;
-  background: var(--green-dim);
-  border: 1px solid rgba(45,189,130,0.2);
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  color: var(--green);
-  font-family: var(--font-mono);
-  display: none;
-}
-.season-selected-info.visible { display: block; }
-
-/* FORMAT TABLE */
-.format-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  margin-bottom: 16px;
-}
-.tab-bar {
-  display: flex;
-  border-bottom: 1px solid var(--border);
-  padding: 0 20px;
-}
-.tab-btn {
-  font-size: 13px;
-  color: var(--text3);
-  padding: 12px 16px;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all 0.15s;
-  font-weight: 500;
-}
-.tab-btn:hover { color: var(--text2); }
-.tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
-.format-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.format-table th {
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--text3);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 10px 16px;
-  text-align: left;
-  background: var(--surface2);
-  border-bottom: 1px solid var(--border);
-}
-.format-table th.right { text-align: right; }
-.format-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: middle;
-  color: var(--text);
-}
-.format-table tr:last-child td { border-bottom: none; }
-.format-table tbody tr { transition: background 0.1s; }
-.format-table tbody tr:hover td { background: var(--surface2); }
-.format-table .total-row td {
-  background: var(--surface2);
-  font-weight: 600;
-  color: var(--green);
-  font-family: var(--font-mono);
-  border-top: 1px solid var(--border2);
-  font-size: 13px;
-}
-.badge {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 999px;
-  letter-spacing: 0.03em;
-  font-family: var(--font-mono);
-}
-.badge-c { background: rgba(45,189,130,0.15); color: #2dbd82; border: 1px solid rgba(45,189,130,0.2); }
-.badge-b { background: rgba(167,139,250,0.15); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
-.badge-i { background: rgba(74,158,255,0.15); color: #4a9eff; border: 1px solid rgba(74,158,255,0.2); }
-.page-pill {
-  display: inline-block;
-  font-size: 10px;
-  padding: 1px 6px;
-  border-radius: 4px;
-  margin: 1px;
-  background: var(--surface2);
-  color: var(--text2);
-  border: 1px solid var(--border);
-}
-.page-pill.tbd { color: var(--amber); background: var(--amber-dim); border-color: rgba(245,166,35,0.2); }
-.slot-input {
-  width: 48px;
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  border-radius: var(--radius-sm);
-  color: var(--text);
-  font-size: 13px;
-  font-family: var(--font-mono);
-  text-align: center;
-  padding: 4px 6px;
-  transition: border-color 0.15s;
-}
-.slot-input:focus {
-  outline: none;
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px var(--green-dim);
-}
-.cpm-badge {
-  font-size: 11px;
-  font-family: var(--font-mono);
-  color: var(--amber);
-  background: var(--amber-dim);
-  border: 1px solid rgba(245,166,35,0.2);
-  padding: 2px 7px;
-  border-radius: 4px;
-}
-.impr-val {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--text);
-  text-align: right;
-}
+/* SEC TITLE */
+.sec-title{font-family:var(--font-d);font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;margin-top:4px;display:flex;align-items:center;gap:8px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* CONTROLS */
-.controls-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
-  margin-bottom: 28px;
-}
-.control-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-}
-.control-label {
-  font-size: 11px;
-  color: var(--text3);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 500;
-  margin-bottom: 14px;
-}
-.slider-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-.slider-row label {
-  font-size: 12px;
-  color: var(--text2);
-  min-width: 120px;
-}
-.slider-row input[type=range] {
-  flex: 1;
-  -webkit-appearance: none;
-  height: 3px;
-  background: var(--surface2);
-  border-radius: 2px;
-  outline: none;
-}
-.slider-row input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--green);
-  cursor: pointer;
-  border: 2px solid var(--bg);
-  box-shadow: 0 0 0 2px var(--green);
-}
-.slider-val {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--green);
-  min-width: 52px;
-  text-align: right;
-}
+.ctrl-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.ctrl-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px}
+.ctrl-title{font-family:var(--font-d);font-size:11px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.sc-row{display:flex;gap:6px;margin-bottom:12px}
+.sc-pill{flex:1;padding:7px 8px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;text-align:center;transition:all .15s;background:var(--surface2)}
+.sc-pill:hover{border-color:var(--green-mid)}
+.sc-pill.active{background:var(--green-light);border-color:var(--green-mid)}
+.sc-name{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em;font-family:var(--font-d);margin-bottom:1px}
+.sc-pill.active .sc-name{color:var(--green)}
+.sc-val{font-size:15px;font-weight:700;color:var(--ink);font-family:var(--font-d);letter-spacing:-.02em}
+.sc-pill.active .sc-val{color:var(--green)}
+.sl-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.sl-row:last-child{margin-bottom:0}
+.sl-lbl{font-size:12px;color:var(--ink2);min-width:140px}
+.sl-row input[type=range]{flex:1;-webkit-appearance:none;height:3px;background:var(--bg2);border-radius:2px;outline:none;cursor:pointer}
+.sl-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--green);cursor:pointer;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--green)}
+.sl-val{font-size:12px;font-weight:700;color:var(--green);min-width:52px;text-align:right;font-family:var(--font-d)}
+.cpm-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.cpm-row:last-child{margin-bottom:0}
+.cpm-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.cpm-lbl{font-size:12px;color:var(--ink2);flex:1}
+.cpm-inp{width:60px;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:4px 7px;font-size:13px;font-weight:700;font-family:var(--font-d);text-align:center;background:var(--surface);color:var(--ink);transition:border-color .15s}
+.cpm-inp:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 2px rgba(26,102,71,.1)}
+.cpm-hint{font-size:10px;color:var(--ink3)}
 
-/* REVENUE SECTION */
-.rev-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
-  margin-bottom: 28px;
-}
-.rev-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  position: relative;
-  overflow: hidden;
-}
-.rev-card.featured {
-  background: linear-gradient(135deg, rgba(45,189,130,0.12), rgba(45,189,130,0.04));
-  border-color: rgba(45,189,130,0.3);
-}
-.rev-card.featured::after {
-  content: 'FRÁVEGA';
-  position: absolute;
-  top: 12px; right: 12px;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  color: var(--green);
-  background: var(--green-dim);
-  border: 1px solid rgba(45,189,130,0.2);
-  padding: 2px 6px;
-  border-radius: 999px;
-  letter-spacing: 0.05em;
-}
-.rev-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; margin-bottom: 8px; }
-.rev-value { font-size: 28px; font-weight: 600; font-family: var(--font-mono); letter-spacing: -0.02em; margin-bottom: 4px; }
-.rev-card.featured .rev-value { color: var(--green); }
-.rev-sub { font-size: 11px; color: var(--text3); }
+/* PAGES GRID */
+.pages-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;margin-bottom:20px}
+.page-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.pc-header{padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:space-between}
+.pc-title{font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--ink);letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+.pc-icon{width:22px;height:22px;border-radius:5px;background:var(--green-light);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.pc-pvs{font-size:11px;color:var(--ink3);font-family:var(--font-d);font-weight:600}
+.pc-pvs span{color:var(--green)}
 
-/* ANNUAL TABLE */
-.annual-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.annual-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-}
-.annual-table th {
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--text3);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 10px 14px;
-  text-align: right;
-  background: var(--surface2);
-  border-bottom: 1px solid var(--border);
-}
-.annual-table th:first-child { text-align: left; }
-.annual-table td {
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--border);
-  text-align: right;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text2);
-}
-.annual-table td:first-child {
-  text-align: left;
-  font-family: var(--font-body);
-  color: var(--text);
-  font-size: 13px;
-}
-.annual-table tr.peak-row td { background: rgba(45,189,130,0.05); }
-.annual-table tr.peak-row td:first-child { color: var(--green); }
-.annual-table .net-col { color: var(--green) !important; font-weight: 600; }
-.annual-table tfoot td {
-  font-weight: 600;
-  color: var(--text);
-  background: var(--surface2);
-  border-top: 1px solid var(--border2);
-}
-.annual-table tfoot td.net-col { color: var(--green); }
-.peak-tag {
-  display: inline-block;
-  font-size: 9px;
-  background: var(--green-dim);
-  color: var(--green);
-  border: 1px solid rgba(45,189,130,0.2);
-  padding: 1px 5px;
-  border-radius: 3px;
-  margin-left: 6px;
-  font-family: var(--font-mono);
-  vertical-align: middle;
-}
+/* SLOT */
+.slot-group{border-bottom:1px solid var(--border)}
+.slot-group:last-child{border-bottom:none}
+.slot-header{display:flex;align-items:center;padding:7px 16px;background:var(--bg);border-bottom:1px solid var(--border);gap:8px}
+.slot-name{font-size:10px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em;font-family:var(--font-d);flex:1}
+.slot-cnt-wrap{display:flex;align-items:center;gap:5px}
+.slot-cnt-lbl{font-size:10px;color:var(--ink3)}
+.slot-cnt-inp{width:44px;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:3px 6px;font-size:12px;font-family:var(--font-d);font-weight:600;text-align:center;background:var(--surface);color:var(--ink);transition:border-color .15s}
+.slot-cnt-inp:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 2px rgba(26,102,71,.1)}
+.slot-total{font-size:10px;color:var(--ink3);font-family:var(--font-d);white-space:nowrap}
+.slot-total span{color:var(--green);font-weight:600}
 
-/* CPM LEGEND */
-.cpm-legend {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.cpm-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 10px 14px;
-}
-.cpm-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.cpm-info { flex: 1; }
-.cpm-name { font-size: 12px; color: var(--text); font-weight: 500; }
-.cpm-range { font-size: 11px; color: var(--text3); font-family: var(--font-mono); }
-.cpm-field {
-  width: 60px;
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  border-radius: 6px;
-  color: var(--amber);
-  font-size: 12px;
-  font-family: var(--font-mono);
-  text-align: center;
-  padding: 4px 6px;
-}
-.cpm-field:focus { outline: none; border-color: var(--amber); box-shadow: 0 0 0 3px var(--amber-dim); }
+/* COMPAT WARNING */
+.compat-warn{font-size:11px;padding:5px 16px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--border)}
+.compat-warn.error{background:var(--red-light);color:var(--red);border-bottom-color:var(--red-mid)}
+.compat-warn.caution{background:var(--amber-light);color:var(--amber);border-bottom-color:var(--amber-mid)}
+.compat-icon{font-size:12px;flex-shrink:0}
 
-/* SCENARIOS */
-.scenario-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.scenario-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: center;
-}
-.scenario-card:hover { border-color: var(--border2); }
-.scenario-card.active { border-color: var(--green); background: var(--green-dim); }
-.scenario-name { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; margin-bottom: 6px; }
-.scenario-fill { font-family: var(--font-mono); font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-.scenario-card.active .scenario-fill { color: var(--green); }
-.scenario-desc { font-size: 11px; color: var(--text3); }
+/* FORMAT ROW */
+.fmt-row{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:8px;padding:8px 16px;border-bottom:1px solid var(--border);transition:background .1s}
+.fmt-row:last-child{border-bottom:none}
+.fmt-row:hover{background:var(--surface2)}
+.fmt-name{font-size:12px;color:var(--ink);font-weight:500;line-height:1.3}
+.fmt-name.opt{color:var(--ink3)}
+.fmt-name.opt::after{content:' (opcional)';font-size:10px;color:var(--amber);font-weight:600}
+.badge{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;letter-spacing:.04em;font-family:var(--font-d);text-transform:uppercase;margin-top:2px}
+.bc{background:var(--green-light);color:var(--green)}
+.bb{background:var(--purple-light);color:var(--purple)}
+.bi{background:var(--blue-light);color:var(--blue)}
+.bv{background:var(--amber-light);color:var(--amber)}
+.share-inp{width:48px;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:3px 5px;font-size:12px;font-family:var(--font-d);font-weight:600;text-align:center;background:var(--surface);color:var(--ink);transition:border-color .15s}
+.share-inp:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 2px rgba(26,102,71,.1)}
+.share-pct{font-size:11px;color:var(--ink3)}
+.fmt-impr{font-size:12px;font-weight:600;color:var(--ink);font-family:var(--font-d);text-align:right;min-width:52px}
+.share-warn{font-size:10px;color:var(--amber);padding:4px 16px;background:var(--amber-light);display:none}
+.share-warn.v{display:block}
 
-/* FOOTER */
-footer {
-  border-top: 1px solid var(--border);
-  padding: 28px 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* REV CARDS */
+.rev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:18px}
+.rev-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.rev-card.hi{background:var(--green-light);border-color:var(--green-mid)}
+.rev-lbl{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;font-family:var(--font-d);margin-bottom:5px}
+.rev-card.hi .rev-lbl{color:var(--green)}
+.rev-val{font-size:24px;font-weight:700;font-family:var(--font-d);letter-spacing:-.03em;color:var(--ink)}
+.rev-card.hi .rev-val{color:var(--green)}
+.rev-sub{font-size:11px;color:var(--ink3);margin-top:3px}
+
+/* ANNUAL */
+.annual-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.atbl{width:100%;border-collapse:collapse;font-size:12px}
+.atbl th{background:var(--surface2);padding:8px 13px;text-align:right;font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);font-family:var(--font-d)}
+.atbl th:first-child{text-align:left}
+.atbl td{padding:9px 13px;border-bottom:1px solid var(--border);text-align:right;color:var(--ink2);font-family:var(--font-d);font-weight:500}
+.atbl td:first-child{text-align:left;color:var(--ink);font-family:var(--font-b);font-weight:500;font-size:13px}
+.atbl tr.pk td{background:rgba(26,102,71,.04)}
+.atbl tr.pk td:first-child{color:var(--green);font-weight:600}
+.net{color:var(--green)!important;font-weight:700!important}
+.atbl tfoot td{background:var(--surface2);border-top:2px solid var(--border);color:var(--ink);font-weight:700;border-bottom:none}
+.atbl tfoot td.net{font-size:13px}
+.ptag{display:inline-block;font-size:8px;background:var(--green-light);color:var(--green);border:1px solid var(--green-mid);padding:1px 5px;border-radius:3px;margin-left:5px;font-family:var(--font-d);font-weight:700;vertical-align:middle;letter-spacing:.04em}
+
+/* SP */
+.sp-info{background:var(--blue-light);border:1px solid rgba(26,74,138,.15);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--blue);margin-bottom:16px;line-height:1.5}
+.sp-inp{width:68px;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:4px 8px;font-size:13px;font-weight:700;font-family:var(--font-d);text-align:center;background:var(--surface);color:var(--ink)}
+.sp-inp:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(26,74,138,.1)}
+.sp-res{font-size:12px;font-weight:700;color:var(--blue);font-family:var(--font-d);text-align:right;min-width:60px}
+.sp-hi{background:var(--blue-light)!important;border-color:rgba(26,74,138,.25)!important}
+.sp-hi .rev-lbl{color:var(--blue)!important}
+.sp-hi .rev-val{color:var(--blue)!important}
+
+/* COMBINED */
+.comb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:18px}
+.comb-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.comb-card.total{background:var(--ink);border-color:var(--ink)}
+.comb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-family:var(--font-d);margin-bottom:5px;color:var(--ink3)}
+.comb-card.total .comb-lbl{color:rgba(255,255,255,.45)}
+.comb-val{font-size:24px;font-weight:700;font-family:var(--font-d);letter-spacing:-.03em;color:var(--ink)}
+.comb-card.total .comb-val{color:#fff}
+.comb-sub{font-size:11px;color:var(--ink3);margin-top:3px}
+.comb-card.total .comb-sub{color:rgba(255,255,255,.3)}
+
+/* CRITEO NOTE */
+.criteo-note{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius);padding:14px 18px;margin-bottom:18px;font-size:12px;color:var(--ink2);line-height:1.6}
+.criteo-note strong{color:var(--ink);font-weight:600}
+
+@media(max-width:768px){
+  nav{padding:0 16px}
+  .hero,.main{padding-left:16px;padding-right:16px}
+  .hero{grid-template-columns:1fr}
+  .ctrl-grid{grid-template-columns:1fr}
+  .pages-grid{grid-template-columns:1fr}
 }
-.footer-note { font-size: 12px; color: var(--text3); }
-.footer-date { font-family: var(--font-mono); font-size: 11px; color: var(--text3); }
-
-/* ANIMATIONS */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-.fade-in { animation: fadeIn 0.4s ease forwards; }
-
-/* SCROLLBAR */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  nav { padding: 0 16px; }
-  .hero, .section { padding-left: 16px; padding-right: 16px; }
-  .scenario-grid { grid-template-columns: 1fr; }
-  .annual-table { font-size: 11px; }
-  footer { flex-direction: column; gap: 8px; padding: 20px 16px; }
-}
+footer{border-top:1px solid var(--border);padding:18px 32px;max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.fn{font-size:11px;color:var(--ink3)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.fu{animation:fadeUp .3s ease forwards}
 </style>
 </head>
 <body>
@@ -656,547 +217,572 @@ footer {
 <nav>
   <div class="nav-brand">
     <div class="nav-logo">Frávega <span>·</span> Retail Media</div>
-    <div class="nav-badge">RFP · Criteo</div>
+    <div class="nav-pill">RFP · Criteo 2026</div>
   </div>
-  <div class="nav-links">
-    <a class="nav-link active" href="#trafico">Tráfico</a>
-    <a class="nav-link" href="#formatos">Formatos</a>
-    <a class="nav-link" href="#revenue">Revenue</a>
-    <a class="nav-link" href="#anual">Proyección anual</a>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showView('display',this)">Display & Video</button>
+    <button class="nav-tab" onclick="showView('sp',this)">Sponsored Products</button>
+    <button class="nav-tab" onclick="showView('combined',this)">Resumen total</button>
   </div>
 </nav>
 
-<div class="hero fade-in">
-  <div class="hero-eyebrow">Proyección de inventario y monetización</div>
-  <h1 class="hero-title">
-    Retail Media<br>
-    <em>Inventory Forecast</em>
-  </h1>
-  <p class="hero-desc">Calculadora interactiva de impresiones disponibles, inventario monetizable y revenue estimado para el programa de Retail Media de Frávega con Criteo.</p>
-  <div class="hero-meta">
-    <div class="hero-meta-item">Fuente de datos: <span>GA4 Analytics 360</span></div>
-    <div class="hero-meta-item">Período base: <span>Marzo 2026</span></div>
-    <div class="hero-meta-item">Revenue share: <span>85% Frávega / 15% Criteo</span></div>
-    <div class="hero-meta-item">Modelo: <span>CPM diferenciado por formato</span></div>
+<!-- ════════════════════ DISPLAY VIEW ════════════════════ -->
+<div id="view-display" class="view active">
+<div class="hero fu">
+  <div>
+    <div class="hero-eyebrow">Inventario Display & Video</div>
+    <h1 class="hero-title">Proyección por<br><em>página activa</em></h1>
+    <p class="hero-desc">Zonificación basada en la recomendación oficial de Criteo para retailers de electrónica y home appliances. Los slots y shares son editables.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-lbl">Sesiones base</div><div class="hstat-val">11.7M</div></div>
+    <div class="hstat"><div class="hstat-lbl">Rev. share Frávega</div><div class="hstat-val g">85%</div></div>
   </div>
 </div>
+<div class="main">
 
-<hr class="section-divider">
-
-<!-- TRAFFIC SECTION -->
-<section class="section" id="trafico">
-  <div class="sec-header">
-    <span class="sec-num">01</span>
-    <h2 class="sec-title">Tráfico base del sitio</h2>
+  <div class="criteo-note">
+    <strong>Zonificación recomendada por Criteo</strong> — 1–2 placements de Display por página, complementando posiciones orgánicas sin competir visualmente.
+    Reglas de compatibilidad aplicadas: dos Spotlights en la misma página no se recomiendan · Commerce Display Video + Spotlight en la misma página tampoco se recomienda.
+    <strong>Override v2</strong> disponible para configurar variaciones visuales desde plataforma. <strong>Gen AI de creativos</strong> en roadmap H2 2026.
   </div>
 
-  <div class="kpi-grid">
-    <div class="kpi"><div class="kpi-label">Sesiones mensuales</div><div class="kpi-value">11.7M</div><div class="kpi-sub">Marzo 2026 · GA4</div></div>
-    <div class="kpi"><div class="kpi-label">Usuarios totales</div><div class="kpi-value">6.6M</div><div class="kpi-sub">+20.3% usuarios recurrentes</div></div>
-    <div class="kpi"><div class="kpi-label">Split mobile</div><div class="kpi-value">79%</div><div class="kpi-sub">9.4M sesiones mobile</div></div>
-    <div class="kpi"><div class="kpi-label">Views / sesión</div><div class="kpi-value">5.32</div><div class="kpi-sub">Desktop 6.4 · Mobile 5.02</div></div>
-    <div class="kpi kpi-green"><div class="kpi-label">Pageviews totales</div><div class="kpi-value" id="kpi-pvtotal">—</div><div class="kpi-sub">sesiones × views/sesión</div></div>
-    <div class="kpi"><div class="kpi-label">Sesiones anuales 2025</div><div class="kpi-value">173.6M</div><div class="kpi-sub">Promedio 14.5M/mes</div></div>
-  </div>
-
-  <div class="season-section">
-    <div class="season-title">Estacionalidad 2025 — Sesiones por mes</div>
-    <div class="season-subtitle">Hacé click en un mes para recalcular el inventario y revenue con ese volumen de tráfico.</div>
-    <div class="chart-wrap" id="season-chart"></div>
-    <div class="season-selected-info" id="season-info"></div>
-  </div>
-</section>
-
-<hr class="section-divider">
-
-<!-- FORMATS SECTION -->
-<section class="section" id="formatos">
-  <div class="sec-header">
-    <span class="sec-num">02</span>
-    <h2 class="sec-title">Formatos e inventario disponible</h2>
-  </div>
-
-  <div class="cpm-legend" id="cpm-legend"></div>
-
-  <div class="format-card">
-    <div class="tab-bar">
-      <div class="tab-btn active" onclick="switchTab('confirmed',this)">Formatos confirmados</div>
-      <div class="tab-btn" onclick="switchTab('all',this)">Incluir formatos "?"</div>
+  <div class="season-bar">
+    <div class="season-header">
+      <div class="season-title">Estacionalidad 2025 — click para simular mes</div>
+      <div class="season-sel" id="d-sel-lbl">Mostrando: Marzo 2026 (base)</div>
     </div>
-    <div style="overflow-x:auto">
-      <table class="format-table">
-        <thead>
-          <tr>
-            <th>Formato</th>
-            <th>Tipo</th>
-            <th>CPM</th>
-            <th>Páginas activas</th>
-            <th style="text-align:center">Slots</th>
-            <th class="right">Impresiones/mes</th>
-            <th class="right">Rev. bruto/mes</th>
-          </tr>
-        </thead>
-        <tbody id="format-rows"></tbody>
-        <tfoot>
-          <tr class="total-row">
-            <td colspan="5">Total impresiones disponibles</td>
-            <td style="text-align:right" id="total-impr">—</td>
-            <td style="text-align:right" id="total-rev-bruto">—</td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  </div>
-</section>
-
-<hr class="section-divider">
-
-<!-- REVENUE SECTION -->
-<section class="section" id="revenue">
-  <div class="sec-header">
-    <span class="sec-num">03</span>
-    <h2 class="sec-title">Proyección de revenue</h2>
+    <div class="mbars" id="mbars-d"></div>
   </div>
 
-  <div class="scenario-grid">
-    <div class="scenario-card" onclick="applyScenario(25,this)" id="sc-cons">
-      <div class="scenario-name">Conservador</div>
-      <div class="scenario-fill">25%</div>
-      <div class="scenario-desc">Fill rate · Arranque sin demanda propia</div>
-    </div>
-    <div class="scenario-card active" onclick="applyScenario(40,this)" id="sc-base">
-      <div class="scenario-name">Base</div>
-      <div class="scenario-fill">40%</div>
-      <div class="scenario-desc">Fill rate · Con pool de demanda Criteo</div>
-    </div>
-    <div class="scenario-card" onclick="applyScenario(60,this)" id="sc-opt">
-      <div class="scenario-name">Optimista</div>
-      <div class="scenario-fill">60%</div>
-      <div class="scenario-desc">Fill rate · Programa maduro año 2+</div>
-    </div>
+  <div class="sec-title">Resumen del mes</div>
+  <div class="summary">
+    <div class="sum-item"><div class="sum-lbl">Impresiones disponibles</div><div class="sum-val" id="d-ti">—</div><div class="sum-sub">todos los formatos</div></div>
+    <div class="sum-item"><div class="sum-lbl">Impr. vendidas</div><div class="sum-val" id="d-si">—</div><div class="sum-sub" id="d-fs">al fill rate</div></div>
+    <div class="sum-item"><div class="sum-lbl">Revenue bruto</div><div class="sum-val" id="d-rg">—</div><div class="sum-sub">USD/mes</div></div>
+    <div class="sum-item"><div class="sum-lbl">Revenue neto Frávega</div><div class="sum-val g" id="d-rn">—</div><div class="sum-sub" id="d-ra">—/año</div></div>
   </div>
 
-  <div class="controls-grid">
-    <div class="control-card">
-      <div class="control-label">Fill rate & revenue share</div>
-      <div class="slider-row">
-        <label>Fill rate</label>
-        <input type="range" id="fill" min="5" max="80" value="40" step="1" oninput="update()">
-        <span class="slider-val" id="fill-v">40%</span>
+  <div class="sec-title">Parámetros</div>
+  <div class="ctrl-grid">
+    <div class="ctrl-card">
+      <div class="ctrl-title">Fill rate & revenue share</div>
+      <div class="sc-row">
+        <div class="sc-pill" onclick="setScenario(25,this)"><div class="sc-name">Conservador</div><div class="sc-val">25%</div></div>
+        <div class="sc-pill active" onclick="setScenario(40,this)"><div class="sc-name">Base</div><div class="sc-val">40%</div></div>
+        <div class="sc-pill" onclick="setScenario(60,this)"><div class="sc-name">Optimista</div><div class="sc-val">60%</div></div>
       </div>
-      <div class="slider-row">
-        <label>Rev. share Frávega</label>
-        <input type="range" id="rs" min="50" max="95" value="85" step="1" oninput="update()">
-        <span class="slider-val" id="rs-v">85%</span>
+      <div class="sl-row">
+        <span class="sl-lbl">Fill rate</span>
+        <input type="range" id="d-fill" min="5" max="80" value="40" step="1" oninput="updateD()">
+        <span class="sl-val" id="d-fv">40%</span>
+      </div>
+      <div class="sl-row">
+        <span class="sl-lbl">Rev. share Frávega</span>
+        <input type="range" id="d-rs" min="50" max="95" value="85" step="1" oninput="updateD()">
+        <span class="sl-val" id="d-rv">85%</span>
       </div>
     </div>
-    <div class="control-card">
-      <div class="control-label">CPM por tipo de formato (USD)</div>
-      <div class="slider-row">
-        <label>Display estándar (IAB)</label>
-        <input type="range" id="cpm-iab" min="1" max="10" value="4" step="0.5" oninput="update()">
-        <span class="slider-val" id="cpm-iab-v">USD 4</span>
-      </div>
-      <div class="slider-row">
-        <label>Commerce Display</label>
-        <input type="range" id="cpm-commerce" min="2" max="15" value="6" step="0.5" oninput="update()">
-        <span class="slider-val" id="cpm-commerce-v">USD 6</span>
-      </div>
-      <div class="slider-row">
-        <label>Branding Display</label>
-        <input type="range" id="cpm-branding" min="2" max="15" value="5" step="0.5" oninput="update()">
-        <span class="slider-val" id="cpm-branding-v">USD 5</span>
-      </div>
-      <div class="slider-row">
-        <label>Video (todos)</label>
-        <input type="range" id="cpm-video" min="5" max="20" value="12" step="0.5" oninput="update()">
-        <span class="slider-val" id="cpm-video-v">USD 12</span>
-      </div>
+    <div class="ctrl-card">
+      <div class="ctrl-title">CPM por tipo de formato (USD)</div>
+      <div class="cpm-row"><div class="cpm-dot" style="background:var(--green)"></div><span class="cpm-lbl">Commerce Display</span><input class="cpm-inp" type="number" id="cpm-c" value="6" min="1" max="20" step=".5" oninput="updateD()"><span class="cpm-hint">USD 4–10</span></div>
+      <div class="cpm-row"><div class="cpm-dot" style="background:var(--purple)"></div><span class="cpm-lbl">Branding Display</span><input class="cpm-inp" type="number" id="cpm-b" value="5" min="1" max="20" step=".5" oninput="updateD()"><span class="cpm-hint">USD 4–10</span></div>
+      <div class="cpm-row"><div class="cpm-dot" style="background:var(--amber)"></div><span class="cpm-lbl">Video</span><input class="cpm-inp" type="number" id="cpm-v" value="12" min="5" max="25" step=".5" oninput="updateD()"><span class="cpm-hint">USD 8–20</span></div>
     </div>
   </div>
 
+  <div class="sec-title">Configuración por página</div>
+  <div class="pages-grid" id="pages-grid"></div>
+
+  <div class="sec-title">Proyección anual</div>
+  <div class="annual-wrap"><div style="overflow-x:auto">
+    <table class="atbl">
+      <thead><tr><th>Mes</th><th>Sesiones</th><th>Impr. disponibles</th><th>Impr. vendidas</th><th>Rev. bruto</th><th>Rev. neto Frávega</th></tr></thead>
+      <tbody id="d-ann-body"></tbody>
+      <tfoot><tr id="d-ann-tot"><td>Total anual</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="net">—</td></tr></tfoot>
+    </table>
+  </div></div>
+
+</div>
+</div>
+
+<!-- ════════════════════ SP VIEW ════════════════════ -->
+<div id="view-sp" class="view">
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">Sponsored Products</div>
+    <h1 class="hero-title">Productos<br><em>patrocinados</em></h1>
+    <p class="hero-desc">Formato nativo in-grid. Modelo CPC — se cobra por click, no por impresión. Se integra en listing y búsqueda con el diseño propio del retailer.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-lbl">Modelo de cobro</div><div class="hstat-val">CPC</div></div>
+    <div class="hstat"><div class="hstat-lbl">CPC base</div><div class="hstat-val g">USD 1.00</div></div>
+  </div>
+</div>
+<div class="main">
+
+  <div class="season-bar">
+    <div class="season-header">
+      <div class="season-title">Estacionalidad 2025</div>
+      <div class="season-sel" id="sp-sel-lbl">Mostrando: Marzo 2026 (base)</div>
+    </div>
+    <div class="mbars" id="mbars-sp"></div>
+  </div>
+
+  <div class="sp-info">Sponsored Products adopta el tile orgánico del sitio — sin dimensiones fijas. El CTR típico en retail media de electrónica es 0.3%–1.5%. Fill rate representa el porcentaje de impresiones donde hay al menos un anunciante compitiendo.</div>
+
+  <div class="sec-title">Parámetros</div>
+  <div class="ctrl-grid">
+    <div class="ctrl-card">
+      <div class="ctrl-title">Slots y tráfico</div>
+      <div class="sl-row"><span class="sl-lbl">Slots SP · Listing/Categoría</span><input class="sp-inp" type="number" id="sp-sl" value="3" min="1" max="10" step="1" oninput="updateSP()"><span class="sp-res" id="sp-il">—</span></div>
+      <div class="sl-row"><span class="sl-lbl">Slots SP · Búsqueda</span><input class="sp-inp" type="number" id="sp-ss" value="3" min="1" max="10" step="1" oninput="updateSP()"><span class="sp-res" id="sp-is">—</span></div>
+      <div style="padding-top:8px;border-top:1px solid var(--border);margin-top:8px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:12px;color:var(--ink2);font-weight:600">Total impresiones SP</span>
+        <span class="sp-res" id="sp-it">—</span>
+      </div>
+    </div>
+    <div class="ctrl-card">
+      <div class="ctrl-title">CPC, CTR & revenue share</div>
+      <div class="sl-row"><span class="sl-lbl">CTR estimado</span><input type="range" id="sp-ctr" min=".1" max="3" value=".8" step=".1" oninput="updateSP()"><span class="sl-val" id="sp-ctrv">.8%</span></div>
+      <div class="sl-row"><span class="sl-lbl">Fill rate</span><input type="range" id="sp-fill" min="10" max="90" value="50" step="1" oninput="updateSP()"><span class="sl-val" id="sp-fillv">50%</span></div>
+      <div class="cpm-row" style="margin-top:8px"><span class="cpm-lbl">CPC (USD)</span><input class="cpm-inp" type="number" id="sp-cpc" value="1" min=".1" max="5" step=".1" oninput="updateSP()"><span class="cpm-hint">base USD 1.00</span></div>
+      <div class="sl-row" style="margin-top:8px"><span class="sl-lbl">Rev. share Frávega</span><input type="range" id="sp-rs" min="50" max="95" value="85" step="1" oninput="updateSP()"><span class="sl-val" id="sp-rsv">85%</span></div>
+    </div>
+  </div>
+
+  <div class="sec-title">Revenue Sponsored Products</div>
   <div class="rev-grid">
-    <div class="rev-card">
-      <div class="rev-label">Impresiones disponibles</div>
-      <div class="rev-value" id="r-avail">—</div>
-      <div class="rev-sub">inventario total del mes</div>
-    </div>
-    <div class="rev-card">
-      <div class="rev-label">Impresiones vendidas</div>
-      <div class="rev-value" id="r-sold">—</div>
-      <div class="rev-sub" id="r-fill-sub">al fill rate seleccionado</div>
-    </div>
-    <div class="rev-card">
-      <div class="rev-label">Revenue bruto</div>
-      <div class="rev-value" id="r-gross">—</div>
-      <div class="rev-sub">100% antes del reparto</div>
-    </div>
-    <div class="rev-card featured">
-      <div class="rev-label">Revenue neto Frávega</div>
-      <div class="rev-value" id="r-net">—</div>
-      <div class="rev-sub" id="r-annual-sub">—</div>
-    </div>
-  </div>
-</section>
-
-<hr class="section-divider">
-
-<!-- ANNUAL TABLE -->
-<section class="section" id="anual">
-  <div class="sec-header">
-    <span class="sec-num">04</span>
-    <h2 class="sec-title">Proyección anual completa</h2>
+    <div class="rev-card"><div class="rev-lbl">Impr. disponibles</div><div class="rev-val" id="sp-ri">—</div><div class="rev-sub">listing + búsqueda</div></div>
+    <div class="rev-card"><div class="rev-lbl">Clicks/mes</div><div class="rev-val" id="sp-rc">—</div><div class="rev-sub" id="sp-rcs">—</div></div>
+    <div class="rev-card"><div class="rev-lbl">Revenue bruto</div><div class="rev-val" id="sp-rg">—</div><div class="rev-sub">USD/mes</div></div>
+    <div class="rev-card sp-hi"><div class="rev-lbl">Revenue neto Frávega</div><div class="rev-val" id="sp-rn">—</div><div class="rev-sub" id="sp-ra">—/año</div></div>
   </div>
 
-  <div class="annual-card">
-    <div style="overflow-x:auto">
-      <table class="annual-table">
-        <thead>
-          <tr>
-            <th>Mes</th>
-            <th>Sesiones</th>
-            <th>Impr. disponibles</th>
-            <th>Impr. vendidas</th>
-            <th>Rev. bruto</th>
-            <th>Rev. neto Frávega</th>
-          </tr>
-        </thead>
-        <tbody id="annual-body"></tbody>
-        <tfoot>
-          <tr id="annual-total">
-            <td>Total 2025</td>
-            <td>—</td><td>—</td><td>—</td><td>—</td>
-            <td class="net-col">—</td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+  <div class="sec-title">Proyección anual</div>
+  <div class="annual-wrap"><div style="overflow-x:auto">
+    <table class="atbl">
+      <thead><tr><th>Mes</th><th>Sesiones</th><th>Impr. SP</th><th>Clicks</th><th>Rev. bruto</th><th>Rev. neto Frávega</th></tr></thead>
+      <tbody id="sp-ann-body"></tbody>
+      <tfoot><tr id="sp-ann-tot"><td>Total anual</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="net">—</td></tr></tfoot>
+    </table>
+  </div></div>
+
+</div>
+</div>
+
+<!-- ════════════════════ COMBINED VIEW ════════════════════ -->
+<div id="view-combined" class="view">
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">Resumen consolidado</div>
+    <h1 class="hero-title">Revenue total<br><em>del programa</em></h1>
+    <p class="hero-desc">Display & Video + Sponsored Products. Revenue neto Frávega con rev. share 85% / 15% Criteo.</p>
   </div>
-</section>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-lbl">Rev. share</div><div class="hstat-val g">85% Frávega</div></div>
+  </div>
+</div>
+<div class="main">
+  <div class="sec-title">Resumen mensual combinado</div>
+  <div class="comb-grid">
+    <div class="comb-card"><div class="comb-lbl">Display — rev. neto</div><div class="comb-val" id="c-dn">—</div><div class="comb-sub">mes seleccionado</div></div>
+    <div class="comb-card"><div class="comb-lbl">Sponsored Products — rev. neto</div><div class="comb-val" id="c-sn">—</div><div class="comb-sub">mes seleccionado</div></div>
+    <div class="comb-card total"><div class="comb-lbl">Total rev. neto / mes</div><div class="comb-val" id="c-tn">—</div><div class="comb-sub">Frávega</div></div>
+    <div class="comb-card total"><div class="comb-lbl">Proyección anual</div><div class="comb-val" id="c-ta">—</div><div class="comb-sub">basado en 2025</div></div>
+  </div>
+  <div class="sec-title">Proyección anual combinada</div>
+  <div class="annual-wrap"><div style="overflow-x:auto">
+    <table class="atbl">
+      <thead><tr><th>Mes</th><th>Sesiones</th><th>Rev. neto Display</th><th>Rev. neto SP</th><th>Total neto Frávega</th></tr></thead>
+      <tbody id="c-ann-body"></tbody>
+      <tfoot><tr id="c-ann-tot"><td>Total anual</td><td>—</td><td>—</td><td>—</td><td class="net">—</td></tr></tfoot>
+    </table>
+  </div></div>
+</div>
+</div>
 
 <footer>
-  <div class="footer-note">Calculadora de inventario Retail Media · Frávega × Criteo · Confidencial</div>
-  <div class="footer-date" id="footer-date"></div>
+  <div class="fn">Frávega · Retail Media Inventory Calculator · Confidencial · Criteo RFP 2026</div>
+  <div class="fn" id="fdate"></div>
 </footer>
 
 <script>
-const BASE_SESSIONS = 11936703;
-const BASE_DESKTOP  = 2490244;
-const BASE_MOBILE   = 9412739;
-const VPS_D = 6.4, VPS_M = 5.02;
-
-const MONTHLY = [
-  {m:'Enero',s:16401635},{m:'Febrero',s:13233667},{m:'Marzo',s:14845203},
-  {m:'Abril',s:13636442},{m:'Mayo',s:19597327},{m:'Junio',s:12502720},
-  {m:'Julio',s:13387937},{m:'Agosto',s:13851472},{m:'Septiembre',s:12369744},
-  {m:'Octubre',s:13437331},{m:'Noviembre',s:20435042},{m:'Diciembre',s:13743688}
+// ── DATA ─────────────────────────────────────────────────
+const BASE=11936703, BASE_D=2490244, BASE_M=9412739, VPS_D=6.4, VPS_M=5.02;
+const PEAK=[4,10];
+const MONTHLY=[
+  {m:'Enero',ms:'Ene',s:16401635},{m:'Febrero',ms:'Feb',s:13233667},{m:'Marzo',ms:'Mar',s:14845203},
+  {m:'Abril',ms:'Abr',s:13636442},{m:'Mayo',ms:'May',s:19597327},{m:'Junio',ms:'Jun',s:12502720},
+  {m:'Julio',ms:'Jul',s:13387937},{m:'Agosto',ms:'Ago',s:13851472},{m:'Septiembre',ms:'Sep',s:12369744},
+  {m:'Octubre',ms:'Oct',s:13437331},{m:'Noviembre',ms:'Nov',s:20435042},{m:'Diciembre',ms:'Dic',s:13743688}
 ];
+const PD={home:.082,listing:.227,search:.227,pdp:.55,cart:.056,checkout:.032};
+function pvs(s,p){const r=s/BASE;return Math.round((BASE_D*r*VPS_D+BASE_M*r*VPS_M)*(PD[p]||0))}
 
-const PAGE_DIST = {home:.082,listing:.227,search:.227,pdp:.55,cart:.056,checkout:.032};
-const PEAK_MONTHS = [4,10]; // May, Nov (0-indexed)
+// ── PAGES (Criteo recommendation as default) ─────────────
+// Compatibility rules from Criteo:
+// - Two Spotlights on the same page: ERROR
+// - Video + Spotlight on same page: CAUTION
+// Each slot: {id, name, count, formats:[{id,name,type,video,optional,share}], compat?}
+// compat: {level:'error'|'caution', msg, check(activeFormats)}
 
-const FORMATS = [
-  {id:'cdgd',name:'Commerce Display Grid Duet',type:'c',videoType:false,
-   pages:[{k:'listing',l:'Categoría',ok:true},{k:'search',l:'Búsqueda',ok:false}],rec:1},
-  {id:'cds',name:'Commerce Display Spotlight',type:'c',videoType:false,
-   pages:[{k:'home',l:'Home',ok:true},{k:'listing',l:'Categoría',ok:true},{k:'search',l:'Búsqueda',ok:true},{k:'pdp',l:'PDP',ok:true},{k:'cart',l:'Cart',ok:true},{k:'checkout',l:'Checkout',ok:true}],rec:1},
-  {id:'cdgs',name:'Commerce Display Grid Shelf',type:'c',videoType:false,
-   pages:[{k:'listing',l:'Categoría',ok:true},{k:'search',l:'Búsqueda',ok:false}],rec:1},
-  {id:'bdgs',name:'Branding Display Grid Solo',type:'b',videoType:false,
-   pages:[{k:'listing',l:'Categoría',ok:true},{k:'search',l:'Búsqueda',ok:false}],rec:1},
-  {id:'bdss',name:'Branding Display Spotlight Solo',type:'b',videoType:false,
-   pages:[{k:'home',l:'Home',ok:true},{k:'listing',l:'Categoría',ok:true}],rec:1},
-  {id:'iab',name:'IAB Banners',type:'i',videoType:false,
-   pages:[{k:'listing',l:'Categoría',ok:true},{k:'search',l:'Búsqueda',ok:true},{k:'pdp',l:'PDP',ok:true},{k:'cart',l:'Cart',ok:true},{k:'checkout',l:'Checkout',ok:true}],rec:2},
-  {id:'cvs',name:'Commerce Video Spotlight',type:'c',videoType:true,
-   pages:[{k:'listing',l:'Categoría',ok:true},{k:'search',l:'Búsqueda',ok:true},{k:'pdp',l:'PDP',ok:false},{k:'cart',l:'Cart',ok:true},{k:'checkout',l:'Checkout',ok:false}],rec:1},
-  {id:'bvs',name:'Branding Video Standout',type:'b',videoType:true,
-   pages:[{k:'listing',l:'Categoría',ok:true},{k:'search',l:'Búsqueda',ok:true},{k:'pdp',l:'PDP',ok:false},{k:'cart',l:'Cart',ok:true},{k:'checkout',l:'Checkout',ok:false}],rec:1}
-];
-
-let slots = {};
-FORMATS.forEach(f => { slots[f.id] = f.rec; });
-let currentTab = 'confirmed';
-let selectedMonthIdx = null;
-
-function pvForSessions(sessions, page) {
-  const r = sessions / BASE_SESSIONS;
-  return Math.round((BASE_DESKTOP*r*VPS_D + BASE_MOBILE*r*VPS_M) * (PAGE_DIST[page]||0));
-}
-
-function getCPMs() {
-  return {
-    c: parseFloat(document.getElementById('cpm-commerce').value),
-    b: parseFloat(document.getElementById('cpm-branding').value),
-    i: parseFloat(document.getElementById('cpm-iab').value),
-    v: parseFloat(document.getElementById('cpm-video').value)
-  };
-}
-
-function getFormatCPM(f, cpms) {
-  if (f.videoType) return cpms.v;
-  return cpms[f.type];
-}
-
-function getActiveSessions() {
-  return selectedMonthIdx !== null ? MONTHLY[selectedMonthIdx].s : BASE_SESSIONS;
-}
-
-function calcForFormat(f, sessions) {
-  const pages = currentTab === 'confirmed' ? f.pages.filter(p => p.ok) : f.pages;
-  const impr = pages.reduce((a,p) => a + pvForSessions(sessions, p.k), 0) * (slots[f.id]||1);
-  return impr;
-}
-
-function fmt(n) {
-  if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
-  if (n >= 1e3) return Math.round(n/1e3).toLocaleString() + 'K';
-  return Math.round(n).toLocaleString();
-}
-function fmtUSD(n) {
-  if (n >= 1e6) return 'USD ' + (n/1e6).toFixed(2) + 'M';
-  if (n >= 1e3) return 'USD ' + Math.round(n/1e3).toLocaleString() + 'K';
-  return 'USD ' + Math.round(n).toLocaleString();
-}
-
-function typeLabel(f) {
-  const labels = {c:'Commerce',b:'Branding',i:'IAB'};
-  const cls = {c:'badge-c',b:'badge-b',i:'badge-i'};
-  let extra = f.videoType ? ' · Video' : ' · Display';
-  return `<span class="badge ${cls[f.type]}">${labels[f.type]}${extra}</span>`;
-}
-
-function renderCPMLegend() {
-  const legend = document.getElementById('cpm-legend');
-  const items = [
-    {color:'#2dbd82',name:'Commerce Display',desc:'Grid Duet · Spotlight · Grid Shelf',range:'USD 4–10',id:'cpm-commerce'},
-    {color:'#a78bfa',name:'Branding Display',desc:'Grid Solo · Spotlight Solo',range:'USD 4–10',id:'cpm-branding'},
-    {color:'#4a9eff',name:'IAB Banners',desc:'Leaderboard · MRec · Skyscraper',range:'USD 2–8',id:'cpm-iab'},
-    {color:'#f5a623',name:'Video',desc:'Commerce Video · Branding Video',range:'USD 8–20',id:'cpm-video'},
-  ];
-  legend.innerHTML = items.map(item => `
-    <div class="cpm-item">
-      <div class="cpm-dot" style="background:${item.color}"></div>
-      <div class="cpm-info">
-        <div class="cpm-name">${item.name}</div>
-        <div class="cpm-range">${item.desc}</div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-size:9px;color:var(--text3);margin-bottom:3px;font-family:var(--font-mono)">CPM USD</div>
-        <span class="cpm-badge" id="badge-${item.id}">—</span>
-      </div>
-    </div>
-  `).join('');
-}
-
-function updateCPMBadges() {
-  const cpms = getCPMs();
-  document.getElementById('badge-cpm-commerce') && (document.getElementById('badge-cpm-commerce').textContent = cpms.c.toFixed(1));
-  document.getElementById('badge-cpm-branding') && (document.getElementById('badge-cpm-branding').textContent = cpms.b.toFixed(1));
-  document.getElementById('badge-cpm-iab') && (document.getElementById('badge-cpm-iab').textContent = cpms.i.toFixed(1));
-  document.getElementById('badge-cpm-video') && (document.getElementById('badge-cpm-video').textContent = cpms.v.toFixed(1));
-}
-
-function renderTable() {
-  const sessions = getActiveSessions();
-  const cpms = getCPMs();
-  const tbody = document.getElementById('format-rows');
-  tbody.innerHTML = '';
-  let totalImpr = 0, totalRev = 0;
-
-  FORMATS.forEach(f => {
-    const active = currentTab === 'confirmed' ? f.pages.filter(p => p.ok) : f.pages;
-    if (!active.length) return;
-    const impr = calcForFormat(f, sessions);
-    const cpm = getFormatCPM(f, cpms);
-    const fill = parseInt(document.getElementById('fill').value) / 100;
-    const rev = (impr * fill / 1000) * cpm;
-    totalImpr += impr;
-    totalRev += rev;
-
-    const pageLabels = f.pages.map(p => {
-      const inActive = currentTab === 'all' || p.ok;
-      const isPending = !p.ok;
-      if (!inActive) return '';
-      const cls = isPending ? 'page-pill tbd' : 'page-pill';
-      const txt = isPending ? p.l + '?' : p.l;
-      return `<span class="${cls}">${txt}</span>`;
-    }).filter(Boolean).join('');
-
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="font-weight:500;font-size:13px">${f.name}</td>
-      <td>${typeLabel(f)}</td>
-      <td><span class="cpm-badge">USD ${cpm.toFixed(1)}</span></td>
-      <td style="font-size:12px">${pageLabels}</td>
-      <td style="text-align:center">
-        <input class="slot-input" type="number" min="1" max="5" value="${slots[f.id]}" data-id="${f.id}" onchange="slotChange(this)">
-      </td>
-      <td class="impr-val">${fmt(impr)}</td>
-      <td class="impr-val" style="color:var(--green)">${fmtUSD(rev)}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  document.getElementById('total-impr').textContent = fmt(totalImpr);
-  document.getElementById('total-rev-bruto').textContent = fmtUSD(totalRev);
-  document.getElementById('kpi-pvtotal').textContent = fmt(Math.round((BASE_DESKTOP*(getActiveSessions()/BASE_SESSIONS)*VPS_D)+(BASE_MOBILE*(getActiveSessions()/BASE_SESSIONS)*VPS_M)));
-}
-
-function slotChange(el) {
-  slots[el.dataset.id] = Math.max(1, Math.min(5, parseInt(el.value)||1));
-  el.value = slots[el.dataset.id];
-  update();
-}
-
-function switchTab(t, el) {
-  currentTab = t;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  renderTable();
-  update();
-}
-
-function applyScenario(fill, el) {
-  document.getElementById('fill').value = fill;
-  document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  update();
-}
-
-function renderSeasonChart() {
-  const container = document.getElementById('season-chart');
-  container.innerHTML = '';
-  const maxS = Math.max(...MONTHLY.map(m => m.s));
-  MONTHLY.forEach((m, i) => {
-    const h = Math.round((m.s / maxS) * 90);
-    const isPeak = PEAK_MONTHS.includes(i);
-    const isSelected = selectedMonthIdx === i;
-    const wrap = document.createElement('div');
-    wrap.className = 'chart-bar-wrap' + (isPeak ? ' peak' : '') + (isSelected ? ' selected' : '');
-    wrap.innerHTML = `<div class="chart-bar" style="height:${h}px"></div><div class="chart-label">${m.m.substring(0,3)}</div>`;
-    wrap.onclick = () => selectMonth(i);
-    container.appendChild(wrap);
-  });
-}
-
-function selectMonth(i) {
-  selectedMonthIdx = (selectedMonthIdx === i) ? null : i;
-  renderSeasonChart();
-  const info = document.getElementById('season-info');
-  if (selectedMonthIdx !== null) {
-    const m = MONTHLY[selectedMonthIdx];
-    info.textContent = `→ Simulando con ${m.m} 2025 · ${fmt(m.s)} sesiones · ${selectedMonthIdx === 4 || selectedMonthIdx === 10 ? '★ Mes pico' : 'Mes estándar'}`;
-    info.classList.add('visible');
-  } else {
-    info.classList.remove('visible');
+const PAGES=[
+  {
+    id:'home', label:'Homepage', icon:'🏠', pvKey:'home',
+    slots:[
+      {id:'home-s1', name:'Slot 1 · Out-of-grid', count:1,
+       compat:{level:'none'},
+       formats:[
+         {id:'h-cds',  name:'Commerce Display Spotlight', type:'c', video:false, optional:false, share:60},
+         {id:'h-cdgs', name:'Commerce Display Grid Shelf', type:'c', video:false, optional:false, share:40}
+       ]},
+      {id:'home-s2', name:'Slot 2 · Out-of-grid (opcional)', count:1,
+       compat:{level:'none'},
+       formats:[
+         {id:'h-bdss', name:'Branding Display Spotlight Solo', type:'b', video:false, optional:true, share:100}
+       ]}
+    ]
+  },
+  {
+    id:'search', label:'Búsqueda', icon:'🔍', pvKey:'search',
+    slots:[
+      {id:'srch-s1', name:'Slot 1 · In-grid fila 3', count:1,
+       compat:{level:'none'},
+       formats:[
+         {id:'s-cdgd', name:'Commerce Display Grid Duet', type:'c', video:false, optional:false, share:100}
+       ]}
+    ]
+  },
+  {
+    id:'listing', label:'Categoría', icon:'📂', pvKey:'listing',
+    slots:[
+      {id:'lst-s1', name:'Slot 1 · In-grid fila 3', count:1,
+       compat:{level:'none'},
+       formats:[
+         {id:'l-bdgs', name:'Branding Display Grid Solo', type:'b', video:false, optional:false, share:100}
+       ]}
+    ]
+  },
+  {
+    id:'pdp', label:'PDP (Producto)', icon:'📦', pvKey:'pdp',
+    slots:[
+      {id:'pdp-s1', name:'Slot 1 · "Productos relacionados"', count:1,
+       compat:{level:'none'},
+       formats:[
+         {id:'p-cds', name:'Commerce Display Spotlight', type:'c', video:false, optional:false, share:100}
+       ]}
+    ]
+  },
+  {
+    id:'cart', label:'Carrito', icon:'🛒', pvKey:'cart',
+    slots:[
+      {id:'cart-s1', name:'Slot 1 · In-grid', count:1,
+       compat:{level:'none'},
+       formats:[
+         {id:'c-cdgd', name:'Commerce Display Grid Duet', type:'c', video:false, optional:false, share:100}
+       ]}
+    ]
+  },
+  {
+    id:'checkout', label:'Checkout', icon:'✅', pvKey:'checkout',
+    slots:[
+      {id:'chk-s1', name:'Slot 1 · Opcional (0–1)', count:1,
+       compat:{level:'none'},
+       formats:[
+         {id:'chk-f1', name:'Commerce Display Spotlight', type:'c', video:false, optional:true, share:100}
+       ]}
+    ]
   }
-  renderTable();
-  update();
+];
+
+// State
+const ST={dMonth:null, spMonth:null, counts:{}, shares:{}};
+PAGES.forEach(p=>p.slots.forEach(s=>{
+  ST.counts[s.id]=s.count;
+  s.formats.forEach(f=>{ST.shares[f.id]=f.share});
+}));
+
+// ── UTILS ────────────────────────────────────────────────
+function fmt(n){if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return Math.round(n/1e3).toLocaleString()+'K';return Math.round(n).toLocaleString()}
+function fmtUSD(n){if(n>=1e6)return'USD '+(n/1e6).toFixed(2)+'M';if(n>=1e3)return'USD '+Math.round(n/1e3).toLocaleString()+'K';return'USD '+Math.round(n).toLocaleString()}
+function getCPMs(){return{c:parseFloat(document.getElementById('cpm-c').value)||6,b:parseFloat(document.getElementById('cpm-b').value)||5,v:parseFloat(document.getElementById('cpm-v').value)||12}}
+function getFR(){return{fill:parseInt(document.getElementById('d-fill').value)/100,rs:parseInt(document.getElementById('d-rs').value)/100}}
+function getDS(){return ST.dMonth!==null?MONTHLY[ST.dMonth].s:BASE}
+function getSPS(){return ST.spMonth!==null?MONTHLY[ST.spMonth].s:BASE}
+function fmtCPM(f,cpms){if(f.video)return cpms.v;if(f.type==='c')return cpms.c;if(f.type==='b')return cpms.b;return cpms.c}
+
+function badge(f){
+  if(f.video)return`<span class="badge b${f.type==='c'?'v':'v'}">${f.type==='c'?'Commerce':'Branding'} Video</span>`;
+  if(f.type==='c')return'<span class="badge bc">Commerce</span>';
+  if(f.type==='b')return'<span class="badge bb">Branding</span>';
+  return'<span class="badge bi">IAB</span>';
 }
 
-function calcTotalImpressions(sessions) {
-  let total = 0;
-  FORMATS.forEach(f => { total += calcForFormat(f, sessions); });
-  return total;
-}
-
-function calcTotalRevBruto(sessions, cpms, fill) {
-  let rev = 0;
-  FORMATS.forEach(f => {
-    const impr = calcForFormat(f, sessions);
-    const cpm = getFormatCPM(f, cpms);
-    rev += (impr * fill / 1000) * cpm;
+// ── COMPAT CHECK ─────────────────────────────────────────
+function checkPageCompat(page){
+  const warns=[];
+  // Count spotlights across all slots
+  let spotlightCount=0, videoCount=0;
+  page.slots.forEach(s=>{
+    s.formats.forEach(f=>{
+      const sh=ST.shares[f.id]||0;
+      if(sh>0){
+        if(f.name.includes('Spotlight'))spotlightCount++;
+        if(f.video)videoCount++;
+      }
+    });
   });
-  return rev;
+  if(spotlightCount>=2) warns.push({level:'error',msg:'Dos Spotlights en la misma página generan competencia visual — no recomendado por Criteo.'});
+  if(videoCount>0&&spotlightCount>0) warns.push({level:'caution',msg:'Video + Spotlight en la misma página compiten por la atención — usar con cuidado.'});
+  return warns;
 }
 
-function update() {
-  const fill = parseInt(document.getElementById('fill').value) / 100;
-  const rs   = parseInt(document.getElementById('rs').value) / 100;
-  const cpms = getCPMs();
-
-  document.getElementById('fill-v').textContent = Math.round(fill*100) + '%';
-  document.getElementById('rs-v').textContent   = Math.round(rs*100) + '%';
-  document.getElementById('cpm-iab-v').textContent      = 'USD ' + cpms.i.toFixed(1);
-  document.getElementById('cpm-commerce-v').textContent = 'USD ' + cpms.c.toFixed(1);
-  document.getElementById('cpm-branding-v').textContent = 'USD ' + cpms.b.toFixed(1);
-  document.getElementById('cpm-video-v').textContent    = 'USD ' + cpms.v.toFixed(1);
-
-  const sessions = getActiveSessions();
-  const totalImpr = calcTotalImpressions(sessions);
-  const sold = Math.round(totalImpr * fill);
-  const gross = calcTotalRevBruto(sessions, cpms, fill);
-  const net = gross * rs;
-
-  document.getElementById('r-avail').textContent   = fmt(totalImpr);
-  document.getElementById('r-sold').textContent    = fmt(sold);
-  document.getElementById('r-fill-sub').textContent = `${Math.round(fill*100)}% fill rate`;
-  document.getElementById('r-gross').textContent   = fmtUSD(gross);
-  document.getElementById('r-net').textContent     = fmtUSD(net);
-  document.getElementById('r-annual-sub').textContent = fmtUSD(net*12) + ' / año estimado';
-
-  updateCPMBadges();
-  renderTable();
-  renderAnnualTable(fill, rs, cpms);
+// ── CALC ─────────────────────────────────────────────────
+function calcD(sessions){
+  let impr=0, gross=0;
+  const cpms=getCPMs();
+  const {fill,rs}=getFR();
+  PAGES.forEach(p=>{
+    const pv=pvs(sessions,p.pvKey);
+    p.slots.forEach(s=>{
+      const cnt=ST.counts[s.id]||1;
+      s.formats.forEach(f=>{
+        const sh=(ST.shares[f.id]||0)/100;
+        const i=pv*cnt*sh;
+        impr+=i;
+        gross+=(i*fill/1000)*fmtCPM(f,cpms);
+      });
+    });
+  });
+  return{impr:Math.round(impr),sold:Math.round(impr*fill),gross,net:gross*rs};
 }
 
-function renderAnnualTable(fill, rs, cpms) {
-  const tbody = document.getElementById('annual-body');
-  tbody.innerHTML = '';
-  let totS=0, totI=0, totSold=0, totG=0, totN=0;
+// ── SEASON BARS ──────────────────────────────────────────
+function renderBars(cid,selIdx,onSel,lblId){
+  const c=document.getElementById(cid); c.innerHTML='';
+  const maxS=Math.max(...MONTHLY.map(m=>m.s));
+  MONTHLY.forEach((m,i)=>{
+    const h=Math.round((m.s/maxS)*46);
+    const w=document.createElement('div');
+    w.className='mbar-w'+(PEAK.includes(i)?' peak':'')+(selIdx===i?' sel':'');
+    w.innerHTML=`<div class="mbar" style="height:${h}px"></div><div class="mlbl">${m.ms}</div>`;
+    w.onclick=()=>onSel(i);
+    c.appendChild(w);
+  });
+  const lbl=document.getElementById(lblId);
+  lbl.textContent=selIdx!==null?`Mostrando: ${MONTHLY[selIdx].m} 2025${PEAK.includes(selIdx)?' ★ Pico':''}`:'Mostrando: Marzo 2026 (base)';
+}
 
-  MONTHLY.forEach((m, i) => {
-    const impr = calcTotalImpressions(m.s);
-    const sold = Math.round(impr * fill);
-    const gross = calcTotalRevBruto(m.s, cpms, fill);
-    const net = gross * rs;
-    totS+=m.s; totI+=impr; totSold+=sold; totG+=gross; totN+=net;
-    const isPeak = PEAK_MONTHS.includes(i);
-    const tr = document.createElement('tr');
-    if(isPeak) tr.className = 'peak-row';
-    tr.innerHTML = `
-      <td>${m.m}${isPeak ? '<span class="peak-tag">PICO</span>' : ''}</td>
-      <td>${fmt(m.s)}</td>
-      <td>${fmt(impr)}</td>
-      <td>${fmt(sold)}</td>
-      <td>${fmtUSD(gross)}</td>
-      <td class="net-col">${fmtUSD(net)}</td>
-    `;
+// ── RENDER PAGES ─────────────────────────────────────────
+function renderPages(){
+  const container=document.getElementById('pages-grid');
+  container.innerHTML='';
+  const cpms=getCPMs();
+  const {fill}=getFR();
+  const sessions=getDS();
+
+  PAGES.forEach(p=>{
+    const pv=pvs(sessions,p.pvKey);
+    const warns=checkPageCompat(p);
+    const card=document.createElement('div');
+    card.className='page-card';
+
+    let html=`<div class="pc-header">
+      <div class="pc-title"><div class="pc-icon">${p.icon}</div>${p.label}</div>
+      <div class="pc-pvs">${fmt(pv)} <span>PVs/mes</span></div>
+    </div>`;
+
+    // Page-level compat warnings
+    warns.forEach(w=>{
+      html+=`<div class="compat-warn ${w.level}"><span class="compat-icon">${w.level==='error'?'✕':'⚠'}</span>${w.msg}</div>`;
+    });
+
+    p.slots.forEach(s=>{
+      const cnt=ST.counts[s.id]||1;
+      const slotImpr=s.formats.reduce((a,f)=>a+pv*cnt*((ST.shares[f.id]||0)/100),0);
+      const totalShare=s.formats.reduce((a,f)=>a+(ST.shares[f.id]||0),0);
+      const shareOk=s.formats.length<=1||Math.abs(totalShare-100)<1;
+      const multi=s.formats.length>1;
+
+      html+=`<div class="slot-group">
+        <div class="slot-header">
+          <span class="slot-name">${s.name}</span>
+          <div class="slot-cnt-wrap">
+            <span class="slot-cnt-lbl">Slots:</span>
+            <input class="slot-cnt-inp" type="number" min="0" max="10" step=".5" value="${cnt}" data-slot="${s.id}" onchange="updateSlot(this)">
+          </div>
+          <span class="slot-total"><span>${fmt(slotImpr)}</span> impr</span>
+        </div>
+        <div class="share-warn ${shareOk?'':'v'}" id="sw-${s.id}">⚠ Los shares suman ${Math.round(totalShare)}% — deben sumar 100%</div>`;
+
+      s.formats.forEach(f=>{
+        const fImpr=pv*cnt*((ST.shares[f.id]||0)/100);
+        const cpm=fmtCPM(f,cpms);
+        html+=`<div class="fmt-row">
+          <div>
+            <div class="fmt-name${f.optional?' opt':''}">${f.name}</div>
+            <div style="display:flex;gap:4px;align-items:center;margin-top:2px">
+              ${badge(f)}
+              <span style="font-size:10px;color:var(--amber);background:var(--amber-light);border:1px solid rgba(184,92,26,.2);padding:1px 6px;border-radius:3px;font-family:var(--font-d);font-weight:600">CPM USD ${cpm}</span>
+            </div>
+          </div>
+          ${multi
+            ?`<input class="share-inp" type="number" min="0" max="100" step="5" value="${ST.shares[f.id]||0}" data-fid="${f.id}" data-slot="${s.id}" onchange="updateShare(this)">
+               <span class="share-pct">%</span>`
+            :`<span></span><span></span>`
+          }
+          <div class="fmt-impr">${fmt(fImpr)}</div>
+        </div>`;
+      });
+      html+=`</div>`;
+    });
+
+    card.innerHTML=html;
+    container.appendChild(card);
+  });
+}
+
+function updateSlot(el){ST.counts[el.dataset.slot]=parseFloat(el.value)||0;updateD()}
+function updateShare(el){ST.shares[el.dataset.fid]=parseFloat(el.value)||0;updateD()}
+
+// ── UPDATE DISPLAY ───────────────────────────────────────
+function updateD(){
+  const {fill,rs}=getFR();
+  document.getElementById('d-fv').textContent=Math.round(fill*100)+'%';
+  document.getElementById('d-rv').textContent=Math.round(rs*100)+'%';
+  const s=getDS();
+  const {impr,sold,gross,net}=calcD(s);
+  document.getElementById('d-ti').textContent=fmt(impr);
+  document.getElementById('d-si').textContent=fmt(sold);
+  document.getElementById('d-fs').textContent=Math.round(fill*100)+'% fill rate';
+  document.getElementById('d-rg').textContent=fmtUSD(gross);
+  document.getElementById('d-rn').textContent=fmtUSD(net);
+  document.getElementById('d-ra').textContent=fmtUSD(net*12)+'/año est.';
+  renderPages();
+  renderAnnualD();
+  updateCombined();
+}
+
+function renderAnnualD(){
+  const {fill,rs}=getFR();
+  const tbody=document.getElementById('d-ann-body');
+  tbody.innerHTML='';
+  let tS=0,tI=0,tSo=0,tG=0,tN=0;
+  MONTHLY.forEach((m,i)=>{
+    const {impr,sold,gross,net}=calcD(m.s);
+    tS+=m.s;tI+=impr;tSo+=sold;tG+=gross;tN+=net;
+    const tr=document.createElement('tr');
+    if(PEAK.includes(i))tr.className='pk';
+    tr.innerHTML=`<td>${m.m}${PEAK.includes(i)?'<span class="ptag">PICO</span>':''}</td><td>${fmt(m.s)}</td><td>${fmt(impr)}</td><td>${fmt(sold)}</td><td>${fmtUSD(gross)}</td><td class="net">${fmtUSD(net)}</td>`;
     tbody.appendChild(tr);
   });
-
-  const tfoot = document.getElementById('annual-total');
-  tfoot.innerHTML = `
-    <td>Total 2025</td>
-    <td>${fmt(totS)}</td>
-    <td>${fmt(totI)}</td>
-    <td>${fmt(totSold)}</td>
-    <td>${fmtUSD(totG)}</td>
-    <td class="net-col">${fmtUSD(totN)}</td>
-  `;
+  document.getElementById('d-ann-tot').innerHTML=`<td>Total anual</td><td>${fmt(tS)}</td><td>${fmt(tI)}</td><td>${fmt(tSo)}</td><td>${fmtUSD(tG)}</td><td class="net">${fmtUSD(tN)}</td>`;
 }
 
-// NAV ACTIVE STATE
-const navLinks = document.querySelectorAll('.nav-link');
-const sections = document.querySelectorAll('section[id]');
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(s => {
-    if (window.scrollY >= s.offsetTop - 80) current = s.id;
-  });
-  navLinks.forEach(l => {
-    l.classList.toggle('active', l.getAttribute('href') === '#'+current);
-  });
-});
+function setScenario(fill,el){
+  document.getElementById('d-fill').value=fill;
+  document.querySelectorAll('.sc-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  updateD();
+}
 
-// FOOTER DATE
-document.getElementById('footer-date').textContent = 'Generado: ' + new Date().toLocaleDateString('es-AR', {day:'2-digit',month:'long',year:'numeric'});
+// ── SP ───────────────────────────────────────────────────
+function calcSP(s){
+  const sl=parseFloat(document.getElementById('sp-sl').value)||3;
+  const ss=parseFloat(document.getElementById('sp-ss').value)||3;
+  return{il:Math.round(pvs(s,'listing')*sl),is:Math.round(pvs(s,'search')*ss),
+         total:Math.round(pvs(s,'listing')*sl+pvs(s,'search')*ss)};
+}
+function updateSP(){
+  const s=getSPS();
+  const ctr=parseFloat(document.getElementById('sp-ctr').value)/100;
+  const fill=parseInt(document.getElementById('sp-fill').value)/100;
+  const cpc=parseFloat(document.getElementById('sp-cpc').value)||1;
+  const rs=parseInt(document.getElementById('sp-rs').value)/100;
+  document.getElementById('sp-ctrv').textContent=parseFloat(document.getElementById('sp-ctr').value).toFixed(1)+'%';
+  document.getElementById('sp-fillv').textContent=Math.round(fill*100)+'%';
+  document.getElementById('sp-rsv').textContent=Math.round(rs*100)+'%';
+  const sp=calcSP(s);
+  document.getElementById('sp-il').textContent=fmt(sp.il);
+  document.getElementById('sp-is').textContent=fmt(sp.is);
+  document.getElementById('sp-it').textContent=fmt(sp.total);
+  const clicks=Math.round(sp.total*fill*ctr);
+  const gross=clicks*cpc, net=gross*rs;
+  document.getElementById('sp-ri').textContent=fmt(sp.total);
+  document.getElementById('sp-rc').textContent=fmt(clicks);
+  document.getElementById('sp-rcs').textContent=`CTR ${parseFloat(document.getElementById('sp-ctr').value).toFixed(1)}% sobre ${Math.round(fill*100)}% fill`;
+  document.getElementById('sp-rg').textContent=fmtUSD(gross);
+  document.getElementById('sp-rn').textContent=fmtUSD(net);
+  document.getElementById('sp-ra').textContent=fmtUSD(net*12)+'/año est.';
+  renderAnnualSP(ctr,fill,cpc,rs);
+  updateCombined();
+}
+function renderAnnualSP(ctr,fill,cpc,rs){
+  const tbody=document.getElementById('sp-ann-body');
+  tbody.innerHTML='';
+  let tS=0,tI=0,tC=0,tG=0,tN=0;
+  MONTHLY.forEach((m,i)=>{
+    const sp=calcSP(m.s);
+    const clicks=Math.round(sp.total*fill*ctr),gross=clicks*cpc,net=gross*rs;
+    tS+=m.s;tI+=sp.total;tC+=clicks;tG+=gross;tN+=net;
+    const tr=document.createElement('tr');
+    if(PEAK.includes(i))tr.className='pk';
+    tr.innerHTML=`<td>${m.m}${PEAK.includes(i)?'<span class="ptag">PICO</span>':''}</td><td>${fmt(m.s)}</td><td>${fmt(sp.total)}</td><td>${fmt(clicks)}</td><td>${fmtUSD(gross)}</td><td class="net">${fmtUSD(net)}</td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('sp-ann-tot').innerHTML=`<td>Total anual</td><td>${fmt(tS)}</td><td>${fmt(tI)}</td><td>${fmt(tC)}</td><td>${fmtUSD(tG)}</td><td class="net">${fmtUSD(tN)}</td>`;
+}
 
-// INIT
-renderCPMLegend();
-renderSeasonChart();
-update();
+// ── COMBINED ─────────────────────────────────────────────
+function updateCombined(){
+  const{net:dn}=calcD(getDS());
+  const ctr=parseFloat(document.getElementById('sp-ctr').value)/100;
+  const spFill=parseInt(document.getElementById('sp-fill').value)/100;
+  const cpc=parseFloat(document.getElementById('sp-cpc').value)||1;
+  const spRs=parseInt(document.getElementById('sp-rs').value)/100;
+  const sp=calcSP(getSPS());
+  const spNet=Math.round(sp.total*spFill*ctr)*cpc*spRs;
+  document.getElementById('c-dn').textContent=fmtUSD(dn);
+  document.getElementById('c-sn').textContent=fmtUSD(spNet);
+  document.getElementById('c-tn').textContent=fmtUSD(dn+spNet);
+  document.getElementById('c-ta').textContent=fmtUSD((dn+spNet)*12);
+  // Annual combined
+  const{fill:dFill,rs:dRs}=getFR();
+  const cpms=getCPMs();
+  const tbody=document.getElementById('c-ann-body');
+  tbody.innerHTML='';
+  let tS=0,tD=0,tSP=0,tT=0;
+  MONTHLY.forEach((m,i)=>{
+    const{net:dN}=calcD(m.s);
+    const spM=calcSP(m.s);
+    const spN=Math.round(spM.total*spFill*ctr)*cpc*spRs;
+    tS+=m.s;tD+=dN;tSP+=spN;tT+=dN+spN;
+    const tr=document.createElement('tr');
+    if(PEAK.includes(i))tr.className='pk';
+    tr.innerHTML=`<td>${m.m}${PEAK.includes(i)?'<span class="ptag">PICO</span>':''}</td><td>${fmt(m.s)}</td><td>${fmtUSD(dN)}</td><td>${fmtUSD(spN)}</td><td class="net">${fmtUSD(dN+spN)}</td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('c-ann-tot').innerHTML=`<td>Total anual</td><td>${fmt(tS)}</td><td>${fmtUSD(tD)}</td><td>${fmtUSD(tSP)}</td><td class="net">${fmtUSD(tT)}</td>`;
+}
+
+// ── VIEW / SEASON ─────────────────────────────────────────
+function showView(v,el){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  el.classList.add('active');
+  if(v==='combined')updateCombined();
+}
+function selDMonth(i){ST.dMonth=ST.dMonth===i?null:i;renderBars('mbars-d',ST.dMonth,selDMonth,'d-sel-lbl');updateD()}
+function selSPMonth(i){ST.spMonth=ST.spMonth===i?null:i;renderBars('mbars-sp',ST.spMonth,selSPMonth,'sp-sel-lbl');updateSP()}
+
+// ── INIT ─────────────────────────────────────────────────
+document.getElementById('fdate').textContent=new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'});
+renderBars('mbars-d',null,selDMonth,'d-sel-lbl');
+renderBars('mbars-sp',null,selSPMonth,'sp-sel-lbl');
+updateD();
+updateSP();
 </script>
 </body>
 </html>
